@@ -24,30 +24,47 @@ reader.on('line', (line: string) => {
   const sliced: string = line.slice(1, -1);
   const splited: string[] = sliced.split('|');
   const trimmed: string[] = [];
-  let i = 1;
   splited.forEach((data) => {
-    STRING_TABLE_NUMBER.indexOf(i) !== -1
-      ? trimmed.push(`'${data.trim()}'`)
-      : trimmed.push(data.trim());
-    i++;
+    trimmed.push(data.trim());
   });
   tableRows.push(trimmed);
 });
 
 // SQL出力
 reader.on('close', () => {
-  const header: string[] = tableRows[1];
+  // ヘッダーのカラム名を''で囲う
+  const tableHeader: string[] = tableRows[1].map((headerField) => {
+    return `'${headerField}'`;
+  });
+  const tableHeaderJoin: string = tableHeader.join(',');
+  console.log(tableHeaderJoin);
+  let queryPrefix: string = `insert into ${TABLE_NAME} (${tableHeaderJoin}) values `;
+
+  // ヘッダーを除去
   tableRows.splice(0, 3);
+  // 末尾の直線を除去
   tableRows.pop();
-  const headerJoin: string = header.join(',');
-  let queryPrefix: string = `insert into ${TABLE_NAME} (${headerJoin}) values `;
-  const listLength: number = tableRows.length;
+
+  const RowLength: number = tableRows.length;
+  const tableBody = tableRows.map((fields: string[]) => {
+    return fields.map((field: string, i) => {
+      // 指定されたカラムナンバーのフィールドは''で囲う
+      if (STRING_TABLE_NUMBER.indexOf(i + 1) !== -1) {
+        return `'${field}'`;
+      } else {
+        return field;
+      }
+    });
+  });
+
+  // tableBodyのフィールドを連結したものを、queryPrefixの末尾に連結
   let i = 1;
-  tableRows.forEach((tableRowData) => {
-    const delimiter: string = i == listLength ? ';' : ',';
-    queryPrefix += `(${tableRowData.join(',')})${delimiter}\n`;
+  tableBody.forEach((fields: string[]) => {
+    const delimiter: string = i == RowLength ? ';' : ',';
+    queryPrefix += `(${fields.join(',')})${delimiter}\n`;
     i++;
   });
+  // 書き出し
   try {
     const now: Date = new Date();
     const sqlPath: string = './result';
@@ -56,7 +73,7 @@ reader.on('close', () => {
     }
     fs.writeFileSync(`${sqlPath}/${now.getTime()}.sql`, queryPrefix);
     console.log(
-      colors.green(`ファイル名：${now.getTime()}.sql　で出力されました。`)
+      colors.green(`ファイル名：${now.getTime()}.sql で出力されました。`)
     );
   } catch (e) {
     console.log(e);
