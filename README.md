@@ -7,7 +7,7 @@ MySQL の CLI に表示されたテーブルをコピペすることで、INSERT
 1. モジュールインストール
 
 ```
-cd table_paste_to_query
+cd table-paste-to-query
 npm install
 ```
 
