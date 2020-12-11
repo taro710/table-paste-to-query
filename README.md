@@ -42,7 +42,7 @@ npm run exec
 
 ```sql
 insert into tb_human
-('last','first',age)
+('last','first','age')
 values
 ('Sato','Taro',10),
 ('Ito','Jiro',20),
