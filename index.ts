@@ -37,7 +37,6 @@ reader.on('close', () => {
     return `'${headerField}'`;
   });
   const tableHeaderJoin: string = tableHeader.join(',');
-  console.log(tableHeaderJoin);
   let queryPrefix: string = `insert into ${TABLE_NAME} (${tableHeaderJoin}) values `;
 
   // ヘッダーを除去
