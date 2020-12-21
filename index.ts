@@ -2,7 +2,7 @@ import readlineSync from 'readline-sync';
 import colors from 'colors/safe';
 import readline from 'readline';
 import fs from 'fs';
-import { TABLE_NAME, STRING_TABLE_NUMBER } from './params';
+import { TABLE_NAME, STRING_COLUMN_NUMBER } from './params';
 
 // 確認(対話形式)
 if (
@@ -48,7 +48,7 @@ reader.on('close', () => {
   const tableBody = tableRows.map((fields: string[]) => {
     return fields.map((field: string, i) => {
       // 指定されたカラムナンバーのフィールドは''で囲う
-      if (STRING_TABLE_NUMBER.indexOf(i + 1) !== -1) {
+      if (STRING_COLUMN_NUMBER.indexOf(i + 1) !== -1) {
         return `'${field}'`;
       } else {
         return field;
