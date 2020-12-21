@@ -1,4 +1,4 @@
-# MySQL クエリジェネレータ
+# MySQL クエリ生成
 
 MySQL の CLI に表示されたテーブルをコピペすることで、INSERT クエリを出力する。
 
@@ -42,7 +42,7 @@ npm run exec
 
 ```sql
 insert into tb_human
-('last','first',age)
+('last','first','age')
 values
 ('Sato','Taro',10),
 ('Ito','Jiro',20),
